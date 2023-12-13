@@ -6,6 +6,9 @@ var logger = require('morgan');
 const WebSocket = require("ws");
 const WebSocketServer = require("ws").Server;
 
+var app = express();
+
+
 const PORT = process.env.PORT || 9876;
 const myServer = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
@@ -17,7 +20,6 @@ let clientArr = {};
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
 
-var app = express();
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
