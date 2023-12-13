@@ -47,9 +47,8 @@ app.use("/",express.static(path.resolve(__dirname, "../client")))
 
 const myServer = app.listen(9876)       // regular http server using node express which serves your webpage
 
-const wsServer = new WebSocket.Server({
-    noServer: true
-})                                      // a websocket server
+const wsServer = new WebSocket("wss://icm-finals-backend-b895b729e5ed.herokuapp.com:9876/myWebsocket")                                      
+// a websocket server
 
 wsServer.getUniqueID = function () {
   function s4() {
