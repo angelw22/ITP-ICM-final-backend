@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const WebSocket = require("ws");
+const WebSocketServer = require("ws").Server;
+
 
 let clientArr = {}; 
 
@@ -47,8 +49,7 @@ app.use("/",express.static(path.resolve(__dirname, "../client")))
 
 const myServer = app.listen(9876)       // regular http server using node express which serves your webpage
 
-const wsServer = new WebSocket("wss://icm-finals-backend-b895b729e5ed.herokuapp.com:9876/myWebsocket")                                      
-// a websocket server
+const wsServer = new WebSocketServer({ noServer: true });// a websocket server
 
 wsServer.getUniqueID = function () {
   function s4() {
@@ -146,19 +147,10 @@ function sendAll (message) {
 }
 
 
-
-myServer.on('upgrade', async function upgrade(request, socket, head) {      //handling upgrade(http to websocekt) event
-
-    // accepts half requests and rejects half. Reload browser page in case of rejection
-    
-    if(Math.random() > 0.5){
-        return socket.end("HTTP/1.1 401 Unauthorized\r\n", "ascii")     //proper connection close in case of rejection
-    }
-    
-    //emit connection when request accepted
-    wsServer.handleUpgrade(request, socket, head, function done(ws) {
-      wsServer.emit('connection', ws, request);
-    });
+myServer.on('upgrade', function upgrade(request, socket, head) {
+  wsServer.handleUpgrade(request, socket, head, function done(ws) {
+    wsServer.emit('connection', ws, request);
+  });
 });
 
 
